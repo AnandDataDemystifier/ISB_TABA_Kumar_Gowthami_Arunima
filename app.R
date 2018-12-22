@@ -70,10 +70,13 @@ ui <- shinyUI(
                     tabPanel("Overview",
                              h4(p("Data input")),
                              p("This app supports two files: txt file and udpipe trained model file.",align="justify"),
-                             p("Please refer to the link below for sample file of english udpipe trained model"),
-                             a(href="https://github.com/AnandDataDemystifier/ShinyAppTest/blob/master/english-ud-2.0-170801.udpipe?raw=true"
-                               ,"Sample udpipe file"),  
+                             p("Please refer to the link below for sample file of english and hindi udpipe trained model"),
+                             a(href="https://github.com/AnandDataDemystifier/ISB_TABA_Kumar_Gowthami_Arunima/blob/master/english-ud-2.0-170801.udpipe?raw=true"
+                               ,"Sample english udpipe file"),  
+                             a(href="https://github.com/AnandDataDemystifier/ISB_TABA_Kumar_Gowthami_Arunima/blob/master/hindi-ud-2.0-170801.udpipe?raw=true"
+                               ,"Sample hindi udpipe file"), 
                              br(),
+                             
                              p("Please refer to the link below for sample file of other udpipe trained models"),
                              a(href="https://github.com/bnosac/udpipe.models.ud/tree/master/models"
                                ,"Other udpipe files"),  
@@ -95,10 +98,15 @@ ui <- shinyUI(
                     ), ## fluid page end
                   
 
-                    tabPanel("Example dataset", h4(p("Download Sample text file")),
+                    tabPanel("Example english dataset", h4(p("Download Sample text file")),
                               downloadButton('downloadData1', 'Download Nokia Lumia reviews txt file'),br(),br(),
                               p("Please note that download will not work with RStudio interface. Download will work only in web-browsers. So open this app in a web-browser and then download the example file. For opening this app in web-browser click on \"Open in Browser\" as shown below -"),
                               img(src = "example1.png")),
+                    
+                    tabPanel("Example hindi dataset", h4(p("Download Sample text file")),
+                             downloadButton('downloadData2', 'Download Hindi txt file'),br(),br(),
+                             p("Please note that download will not work with RStudio interface. Download will work only in web-browsers. So open this app in a web-browser and then download the example file. For opening this app in web-browser click on \"Open in Browser\" as shown below -"),
+                             img(src = "example1.png")),
                      
                     tabPanel("Annotated Documents ",
                              dataTableOutput('datatableOutput'),
@@ -164,6 +172,20 @@ server <- shinyServer(function(input, output) {
       return(Data)
     }
   })
+  
+  output$downloadData1 <- downloadHandler(
+    filename = function() { "Nokia_Lumia_reviews.txt" },
+    content = function(file) {
+      writeLines(readLines("data/Nokia_Lumia_reviews.txt"), file)
+    }
+  )
+  
+  output$downloadData2 <- downloadHandler(
+    filename = function() { "hindicricket.txt" },
+    content = function(file) {
+      writeLines(readLines("data/hindicricket.txt"), file)
+    }
+  )
   
   annotated_Allxpos<- reactive({
     x <- udpipe_annotate(udpipe_load_model(input$file1$datapath),x = Dataset())
